@@ -8,7 +8,6 @@
 import UIKit
 
 struct APIResponse: Codable {
-//    let elevator: Elevator
     let id: Int
     let column_id: Int
     let serial_number: String?
@@ -21,36 +20,12 @@ struct APIResponse: Codable {
     let updated_at: String?
 }
 
-//struct Elevator: Codable {
-//    let id: Int
-//    let column_id: Int
-//    let serial_number: String
-//    let model: String
-//    let elevator_type: String
-//    let status: String
-//    let information: String
-//    let notes: String
-//    let created_at: String
-//    let updated_at: String
-//}
-
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
     
-    //var status1
-    //Varble would be in the other view controller so you can add it to the new view.
-    
-    
-//    var result: APIResponse?
-    
-    let urlString = "https://whispering-tundra-91467.herokuapp.com/api/elevators/notInOperation"
-    
     @IBOutlet var label: UILabel!
-    
-    
-   
-    
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         getData(callback: { elevatorsIn in
@@ -66,28 +41,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.tableView.dataSource = self
                     self.tableView = UITableView(frame: .zero, style: .grouped)
                     self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-                    
-//                    NotificationCenter.default.addObserver(self, selector: #selector(self.didGetNotificaiton(_:)), name: Notification.Name("text1"), object: nil)
                 }
             } else {
-                
+                //spinner maybe?
             }
-            
         })
-        //getData must be first since it populates the elevatorList array.
-//        view.addSubview(tableView)
-//        tableView.frame = view.bounds
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView = UITableView(frame: .zero, style: .grouped)
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-//
-//        NotificationCenter.default.addObserver(self, selector: #selector(didGetNotificaiton(_:)), name: Notification.Name("text1"), object: nil)
-        
     }
     
-    
     public var elevatorArray = [APIResponse]()
+    
+    let urlString = "https://whispering-tundra-91467.herokuapp.com/api/elevators/notInOperation"
     
     public func getData(callback: @escaping (Bool) -> ()) {
         
@@ -98,18 +61,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             guard let data = data, error == nil else {
                 return
             }
-//            print(data)
             do {
                 let jsonResult = try JSONDecoder().decode([APIResponse].self, from: data)
-//                let str = String(decoding: data, as: UTF8.self)
-
-//                print(jsonResult)
                 for elevator in jsonResult {
                     self.elevatorArray.append(elevator)
                     print(elevator.id)
                 }
                 callback(true)
-//                print(jsonResult.count)
             }
             catch {
                 print(error, "this error")
@@ -117,50 +75,55 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         task.resume()
-        //print(elevatorArray)
-        
+    }
+  
+    //tableview
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let elevator = "Not In Operation"
+        return elevator
+    }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let model = elevatorArray.count
+        return model
+    }
     
-        //tableview
-        func numberOfSections(in tableView: UITableView) -> Int {
-            return 1
-        }
-        
-        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-            
-            let elevator = "Not In Operation"
-        
-            return elevator
-        }
-        
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            //print("numberOfRowsInSection", elevatorArray.count)
-            let model = elevatorArray.count
-            return model
-        }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            //print("cellForRowAt", elevatorArray.count)
-            let elevator = "Elevator "
-            let model = String(self.elevatorArray[indexPath.row].id)
-            let together = elevator + model
-            let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            cell.textLabel?.text = together
-            return cell
-        }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let elevator = "Elevator "
+        let model = String(self.elevatorArray[indexPath.row].id)
+        let together = elevator + model
+        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = together
+        return cell
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let status = self.elevatorArray[indexPath.row].status
-        let id = String(self.elevatorArray[indexPath.row].id)
-        //print("this is the status", status!)
-        let statusController = ElevatorListViewController()
+        let id = String(self.elevatorArray[indexPath.row].id) //Completed
+        let column_id = String(self.elevatorArray[indexPath.row].column_id)
+        let serial_number = self.elevatorArray[indexPath.row].serial_number
+        let model = self.elevatorArray[indexPath.row].model
+        let elevator_type = self.elevatorArray[indexPath.row].elevator_type
+        let status = self.elevatorArray[indexPath.row].status //Completed
+        let information = self.elevatorArray[indexPath.row].information
+        
+        
+        
+        //let statusController = ElevatorListViewController()
         
         //statusController.status2 = "heyoo"
-        print("status 2 poop oo", statusController.status2)
+        //print("status 2 poop oo", statusController.status2)
         let vc = storyboard?.instantiateViewController(identifier: "elevator_vc") as! ElevatorListViewController
-        vc.status2 = status!
         vc.id2 = id
+        vc.column_id2 = column_id
+        vc.serial_number2 = serial_number!
+        vc.model2 = model!
+        vc.elevator_type2 = elevator_type!
+        vc.status2 = status!
+        vc.information2 = information!
+        
         present(vc,animated: true)
           }
     
@@ -183,11 +146,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(vc,animated: true)
     }
     
-    @IBAction func dlskfgsdalfgh() {
-        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
-        vc.modalPresentationStyle = .fullScreen
-        present(vc,animated: true)
-    }
+//    @IBAction func dlskfgsdalfgh() {
+//        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
+//        vc.modalPresentationStyle = .fullScreen
+//        present(vc,animated: true)
+//    }
 
 
 }

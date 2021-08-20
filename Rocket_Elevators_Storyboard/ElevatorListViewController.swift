@@ -8,20 +8,34 @@
 import UIKit
 
 class ElevatorListViewController: UIViewController {
-
-
-    
-    public var status2 = "test"
+ 
     public var id2 = "test"
-    @IBOutlet var status1: UILabel!
+    public var column_id2 = "test"
+    public var serial_number2 = "test"
+    public var model2 = "test"
+    public var status2 = "test"
+    public var elevator_type2 = "test"
+    public var information2 = "test"
+    
     @IBOutlet var id: UILabel!
-    
-    
+    @IBOutlet var column_id: UILabel!
+    @IBOutlet var serial_number: UILabel!
+    @IBOutlet var model: UILabel!
+    @IBOutlet var status: UILabel!
+    @IBOutlet var elevator_type: UILabel!
+    @IBOutlet var information: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        status1.text = status2
         id.text = id2
+        column_id.text = column_id2
+        serial_number.text = serial_number2
+        model.text = model2
+        status.text = status2
+        elevator_type.text = elevator_type2
+        information.text = information2
+        
+        
         // Do any additional setup after loading the view.
     }
     
@@ -51,12 +65,10 @@ class ElevatorListViewController: UIViewController {
                         print(error!)
                         return
                     }
-                    
                     guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
                         print("Error: HTTP request failed")
                         return
                     }
-                    
                 }.resume()
             //This brings the users back to the home page and updates the list of elevators
             let vc = self.storyboard?.instantiateViewController(identifier: "home") as! ViewController
