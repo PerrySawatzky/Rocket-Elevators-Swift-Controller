@@ -38,33 +38,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet var tableView: UITableView!
     
+    //var status1
+    //Varble would be in the other view controller so you can add it to the new view.
+    
+    
 //    var result: APIResponse?
     
     let urlString = "https://whispering-tundra-91467.herokuapp.com/api/elevators/notInOperation"
     
     @IBOutlet var label: UILabel!
     
+    
    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getData()
+        getData(callback: { elevatorsIn in
+            //getData must be first since it populates the elevatorList array.
+            
+            if elevatorsIn {
+                DispatchQueue.main.async {
+                    // UIView usage
+                    //label.text = status
+                    self.view.addSubview(self.tableView)
+                    self.tableView.frame = self.view.bounds
+                    self.tableView.delegate = self
+                    self.tableView.dataSource = self
+                    self.tableView = UITableView(frame: .zero, style: .grouped)
+                    self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+                    
+//                    NotificationCenter.default.addObserver(self, selector: #selector(self.didGetNotificaiton(_:)), name: Notification.Name("text1"), object: nil)
+                }
+            } else {
+                
+            }
+            
+        })
         //getData must be first since it populates the elevatorList array.
-        view.addSubview(tableView)
-        tableView.frame = view.bounds
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didGetNotificaiton(_:)), name: Notification.Name("text1"), object: nil)
+//        view.addSubview(tableView)
+//        tableView.frame = view.bounds
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView = UITableView(frame: .zero, style: .grouped)
+//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+//
+//        NotificationCenter.default.addObserver(self, selector: #selector(didGetNotificaiton(_:)), name: Notification.Name("text1"), object: nil)
         
     }
     
     
     public var elevatorArray = [APIResponse]()
     
-    func getData(){
+    public func getData(callback: @escaping (Bool) -> ()) {
         
         guard let url = URL(string: urlString) else {
             return
@@ -83,55 +108,88 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.elevatorArray.append(elevator)
                     print(elevator.id)
                 }
+                callback(true)
 //                print(jsonResult.count)
             }
             catch {
                 print(error, "this error")
+                callback(false)
             }
         }
         task.resume()
-    }
-    
-    
-    
-    //tableview
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        //print(elevatorArray)
         
-        let elevator = "Elevator 1"
-    
-        return elevator
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("numberOfRowsInSection", elevatorArray.count)
-        let model = elevatorArray.count
-        return model
-    }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("cellForRowAt", elevatorArray.count)
-        let model = self.elevatorArray[indexPath.row].status
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = model
-        return cell
-    }
     
+        //tableview
+        func numberOfSections(in tableView: UITableView) -> Int {
+            return 1
+        }
+        
+        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+            
+            let elevator = "Not In Operation"
+        
+            return elevator
+        }
+        
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            //print("numberOfRowsInSection", elevatorArray.count)
+            let model = elevatorArray.count
+            return model
+        }
+        
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            //print("cellForRowAt", elevatorArray.count)
+            let elevator = "Elevator "
+            let model = String(self.elevatorArray[indexPath.row].id)
+            let together = elevator + model
+            let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = together
+            return cell
+        }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let status = self.elevatorArray[indexPath.row].status
+        let id = String(self.elevatorArray[indexPath.row].id)
+        //print("this is the status", status!)
+        let statusController = ElevatorListViewController()
+        
+        //statusController.status2 = "heyoo"
+        print("status 2 poop oo", statusController.status2)
+        let vc = storyboard?.instantiateViewController(identifier: "elevator_vc") as! ElevatorListViewController
+        vc.status2 = status!
+        vc.id2 = id
+        present(vc,animated: true)
+          }
+    
+
     @objc func didGetNotificaiton(_ notification: Notification) {
         let text = notification.object as! String?
         label.text = text
     }
     
-    @IBAction func didTapButton() {
-        let vc = storyboard?.instantiateViewController(identifier: "other") as! OtherViewController
+//    @IBAction func didTapButton() {
+//        print("here?")
+//        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
+//        vc.modalPresentationStyle = .fullScreen
+//        present(vc,animated: true)
+//    }
+    
+    @IBAction func didTapButtonforElevator() {
+        let vc = storyboard?.instantiateViewController(identifier: "elevator_vc") as! ElevatorListViewController
         vc.modalPresentationStyle = .fullScreen
         present(vc,animated: true)
     }
     
+    @IBAction func dlskfgsdalfgh() {
+        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
+        vc.modalPresentationStyle = .fullScreen
+        present(vc,animated: true)
+    }
 
 
 }
+ 
 
