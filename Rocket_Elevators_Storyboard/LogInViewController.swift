@@ -8,7 +8,6 @@
 import UIKit
 
 struct Employees: Codable {
-//    let elevator: Elevator
     let id: Int
     let email: String
 }
@@ -34,7 +33,6 @@ class LogInViewController: UIViewController {
         present(alert, animated: true)
     }
     @IBAction func didTapLogin() {
-        //print("LOggin gin")
         if field1.text == "" {
             let alert = UIAlertController(title: "Enter Email Address", message: "" , preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
@@ -67,16 +65,16 @@ class LogInViewController: UIViewController {
                            print("Error: HTTP request failed")
                            return
                        }
-                    //print(data)
+                    
                     do {
                         let jsonResult = try JSONDecoder().decode([Employees].self, from: data)
                         for user in jsonResult {
                             if user.email == enteredEmail! {
                                 DispatchQueue.main.async {
-                                print("yessss")
+                                //print("yessss")
+                                self.spinner.stopAnimating()
                                 let vc = self.storyboard?.instantiateViewController(identifier: "home") as! ViewController
                                 self.present(vc,animated: true)
-                                //boolvalue = true
                                 }
                             }
                         }
@@ -85,8 +83,6 @@ class LogInViewController: UIViewController {
                         print(error, "this error")
                     }
                 }.resume()
-            spinner.stopAnimating()
-            //End of else statement
         }
     }
 

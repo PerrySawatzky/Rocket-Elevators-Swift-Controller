@@ -105,9 +105,9 @@
 			children = (
 				B4EDB02726CAFB7400542A28 /* AppDelegate.swift */,
 				B4EDB02926CAFB7400542A28 /* SceneDelegate.swift */,
+				B4EDB05F26CFF97900542A28 /* LogInViewController.swift */,
 				B4EDB02B26CAFB7400542A28 /* ViewController.swift */,
 				B4EDB05B26CEC13F00542A28 /* ElevatorListViewController.swift */,
-				B4EDB05F26CFF97900542A28 /* LogInViewController.swift */,
 				B4EDB02D26CAFB7400542A28 /* Main.storyboard */,
 				B4EDB03026CAFB7600542A28 /* Assets.xcassets */,
 				B4EDB03226CAFB7600542A28 /* LaunchScreen.storyboard */,

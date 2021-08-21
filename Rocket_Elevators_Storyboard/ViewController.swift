@@ -24,10 +24,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet var tableView: UITableView!
     
-    @IBOutlet var label: UILabel!
+//    @IBOutlet var label: UILabel!
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         getData(callback: { elevatorsIn in
             //getData must be first since it populates the elevatorList array.
             
@@ -65,7 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 let jsonResult = try JSONDecoder().decode([APIResponse].self, from: data)
                 for elevator in jsonResult {
                     self.elevatorArray.append(elevator)
-                    print(elevator.id)
+                    //print(elevator.id)
                 }
                 callback(true)
             }
@@ -101,20 +102,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let id = String(self.elevatorArray[indexPath.row].id) //Completed
+        let id = String(self.elevatorArray[indexPath.row].id)
         let column_id = String(self.elevatorArray[indexPath.row].column_id)
         let serial_number = self.elevatorArray[indexPath.row].serial_number
         let model = self.elevatorArray[indexPath.row].model
         let elevator_type = self.elevatorArray[indexPath.row].elevator_type
-        let status = self.elevatorArray[indexPath.row].status //Completed
+        let status = self.elevatorArray[indexPath.row].status
         let information = self.elevatorArray[indexPath.row].information
-        
-        
-        
-        //let statusController = ElevatorListViewController()
-        
-        //statusController.status2 = "heyoo"
-        //print("status 2 poop oo", statusController.status2)
+       
         let vc = storyboard?.instantiateViewController(identifier: "elevator_vc") as! ElevatorListViewController
         vc.id2 = id
         vc.column_id2 = column_id
@@ -124,33 +119,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         vc.status2 = status!
         vc.information2 = information!
         
+        
         present(vc,animated: true)
           }
-    
-
-    @objc func didGetNotificaiton(_ notification: Notification) {
-        let text = notification.object as! String?
-        label.text = text
-    }
-    
-//    @IBAction func didTapButton() {
-//        print("here?")
-//        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
-//        vc.modalPresentationStyle = .fullScreen
-//        present(vc,animated: true)
-//    }
-    
-    @IBAction func didTapButtonforElevator() {
-        let vc = storyboard?.instantiateViewController(identifier: "elevator_vc") as! ElevatorListViewController
-        vc.modalPresentationStyle = .fullScreen
-        present(vc,animated: true)
-    }
-    
-//    @IBAction func dlskfgsdalfgh() {
-//        let vc = storyboard?.instantiateViewController(identifier: "1") as! OtherViewController
-//        vc.modalPresentationStyle = .fullScreen
-//        present(vc,animated: true)
-//    }
 
 
 }
